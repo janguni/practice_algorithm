@@ -13,9 +13,6 @@ public class Main {
 
 		// Solution 호출
 		int result = s.solution(schedules, timelogs, startday);
-		int ww = s.agreeTime(1059);
-		System.out.println("ww = " + ww);
-
 
 		// 출력 확인
 		System.out.println("결과: " + result);

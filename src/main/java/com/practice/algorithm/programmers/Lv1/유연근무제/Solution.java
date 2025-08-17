@@ -23,24 +23,15 @@ class Solution {
 		// 출근 일 수
 		int days = timelogs[0].length;
 
-		// 출근인정 시간에 들어왔는지 확인
-		for (int i = 0; i < totalPeopleCount; i++) {
-			int currentDay = startday;
-			for (int j = 0; j < days; j++) {
-				// 월요일~금요일만 확인
-				if (currentDay <= 5) {
-					if (agreeTime(schedules[i]) < timelogs[i][j]) {
-						isPass.put(i, false);
-						break;
-					}
-				}
-
-				// 일요일 다음을 월요일로 설정
-				currentDay += 1;
-				if (currentDay == 8) {
-					currentDay = 1;
+		// 출근 인정 시간에 들어왔는지 확인
+		for (int day = 0; day < days; day++) {
+			for (int people = 0; people < totalPeopleCount; people++) {
+				if (startday <=5 && !(agreeTime(schedules[people]) >= timelogs[people][day])) {
+					isPass.put(people, false);
 				}
 			}
+			startday++;
+			if (startday == 8) startday = 1;
 		}
 
 		// 출근이 인정된 사람 카운트
@@ -53,14 +44,18 @@ class Solution {
 	}
 
 	// 출근 인정 시간 구하기
-	public int agreeTime(int targetTime) {
-		int agreeTime = targetTime + 10;
-		int minuit = agreeTime - agreeTime/100*100;
-		int hour = agreeTime/100*100;
-		if (minuit >= 60) {
-			agreeTime = hour + 100 + minuit - 60;
+	private int agreeTime(int targetTime) {
+		int hour = targetTime / 100;
+		int minuit = targetTime % 100;
+
+		minuit += 10;
+
+		if (minuit >=60) {
+			hour +=1;
+			minuit -= 60;
 		}
-		return agreeTime;
+
+		return hour*100 + minuit;
 	}
 }
 
