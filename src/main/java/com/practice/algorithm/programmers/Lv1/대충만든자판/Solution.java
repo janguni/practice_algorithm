@@ -1,5 +1,6 @@
 package com.practice.algorithm.programmers.Lv1.대충만든자판;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,35 +16,30 @@ class Solution {
 		int[] answer = new int[targets.length];
 
 		// 알파벳 별로 눌러야 하는 횟수 Map
-		Map<Character, Integer> alpabatMap = new HashMap<>();
-		char alpabat = 'A'; // 'A'의 유니코드인 65가 저장됨
-		for (int i = 0; i < 26; i++) {
-			alpabatMap.put(alpabat, MAX_INT);
-			alpabat++;
-		}
+		int[] countByAlphabet = new int[26];
+		Arrays.fill(countByAlphabet, MAX_INT);
 
 		// 알파벳 별로 눌러야 하는 횟수 구하기
 		for (String key : keymap) {
 			int pushCount = 1;
 			for (int i = 0; i < key.length(); i++) {
-				char c = key.charAt(i);
-				alpabatMap.put(c, Math.min(alpabatMap.get(c), pushCount++));
+				int index = key.charAt(i) - 'A';
+				countByAlphabet[index] = Math.min(countByAlphabet[index], pushCount++);
 			}
 		}
 
 		// 결과값 계산
-		int index = 0;
-		for (String target:targets) {
+		for (int i = 0; i < targets.length; i++) {
 			int result = 0;
-			for (int i = 0; i < target.length(); i++) {
-				Integer pushCount = alpabatMap.get(target.charAt(i));
+			for (int j = 0; j < targets[i].length(); j++) {
+				int pushCount = countByAlphabet[targets[i].charAt(j) - 'A'];
 				if (pushCount == MAX_INT) {
 					result = -1;
 					break;
 				}
 				result += pushCount;
 			}
-			answer[index++] = result;
+			answer[i] = result;
 		}
 		return answer;
 	}
